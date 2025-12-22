@@ -1,0 +1,15 @@
+-- 创建最新资讯表
+CREATE TABLE IF NOT EXISTS `h_news_items` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `title` VARCHAR(255) NOT NULL COMMENT '标题',
+  `img_url` VARCHAR(500) NOT NULL COMMENT '封面图片URL',
+  `link_url` VARCHAR(500) NOT NULL COMMENT '原文/原视频链接',
+  `source` VARCHAR(50) DEFAULT NULL COMMENT '来源（如：B站、公众号）',
+  `category` VARCHAR(50) DEFAULT NULL COMMENT '分类标签',
+  `sort_no` INT NOT NULL DEFAULT 0 COMMENT '排序号',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态: 1-启用, 0-禁用',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_status_sort` (`status`, `sort_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='最新资讯表';

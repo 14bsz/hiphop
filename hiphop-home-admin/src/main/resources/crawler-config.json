@@ -1,0 +1,55 @@
+{
+  "wechat": {
+    "accounts": [
+      {
+        "name": "说唱会馆",
+        "description": "专注于中文说唱资讯",
+        "enabled": true
+      },
+      {
+        "name": "HipHopMan",
+        "description": "Hip-Hop文化传播",
+        "enabled": true
+      },
+      {
+        "name": "嘻哈囚徒",
+        "description": "中文说唱评论与报道",
+        "enabled": true
+      }
+    ]
+  },
+  "bilibili": {
+    "uploaders": [
+      {
+        "uid": "226178777",
+        "name": "街头社区",
+        "description": "中文说唱视频内容创作者",
+        "enabled": true
+      },
+      {
+        "uid": "398510",
+        "name": "中文说唱数据库",
+        "description": "说唱音乐视频",
+        "enabled": true
+      },
+      {
+        "uid": "1577804",
+        "name": "RAPGAME",
+        "description": "说唱相关视频",
+        "enabled": true
+      }
+    ],
+    "keywords": [
+      "说唱",
+      "中文说唱",
+      "Rap",
+      "HipHop"
+    ]
+  },
+  "crawlSettings": {
+    "maxItemsPerSource": 5,
+    "enableRandomSelection": true,
+    "defaultTag": "NEWS",
+    "defaultViews": "0"
+  }
+}

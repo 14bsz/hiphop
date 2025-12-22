@@ -1,0 +1,147 @@
+:root {
+  /* Light Mode: Platinum & Gold - 白金风格 */
+  --hh-bg-dark: #ffffff; /* Pure White */
+  --hh-bg-card: #f4f4f5; /* Light Grey Card */
+  --hh-bg-glass: rgba(255, 255, 255, 0.95);
+  
+  --hh-text-primary: #18181b; /* Zinc 900 */
+  --hh-text-secondary: #71717a; /* Zinc 500 */
+  --hh-text-tertiary: #a1a1aa;
+  
+  --hh-accent: #ffb700; /* Rich Gold */
+  --hh-accent-hover: #ffaa00;
+  --hh-accent-text: #000000;
+  
+  --hh-border: #e4e4e7; /* Zinc 200 */
+  --hh-radius: 12px;
+
+  /* Element Plus Mappings */
+  --el-color-primary: var(--hh-accent);
+  --el-color-primary-light-3: #ffcc4d;
+  --el-color-primary-light-5: #ffe080;
+  --el-color-primary-light-7: #fff0b3;
+  --el-color-primary-light-8: #fff8cc;
+  --el-color-primary-light-9: #fffbe6;
+  --el-color-primary-dark-2: #cc9200;
+  
+  --el-bg-color: var(--hh-bg-card);
+  --el-bg-color-overlay: #ffffff;
+  --el-text-color-primary: var(--hh-text-primary);
+  --el-text-color-regular: var(--hh-text-secondary);
+  --el-border-color: var(--hh-border);
+  --el-border-color-light: #e4e7ed;
+  --el-border-radius-base: var(--hh-radius);
+}
+
+/* Dark Mode: Black & Gold - 黑金奢华 */
+html[class="dark"] {
+  --hh-bg-dark: #050505; /* Deep Black */
+  --hh-bg-card: #141414; /* Dark Surface */
+  --hh-bg-glass: rgba(20, 20, 20, 0.9);
+  
+  --hh-text-primary: #ffffff;
+  --hh-text-secondary: #a1a1aa;
+  --hh-text-tertiary: #52525b;
+  
+  --hh-accent: #ffd700; /* Pure Gold */
+  --hh-accent-hover: #ffea00;
+  
+  --hh-border: #27272a; /* Subtle Border */
+  
+  /* Update Element Plus Mappings for Dark */
+  --el-bg-color: var(--hh-bg-dark);
+  --el-bg-color-overlay: var(--hh-bg-card);
+  --el-border-color: var(--hh-border);
+  --el-border-color-light: #333;
+  --el-mask-color: rgba(0, 0, 0, 0.8);
+}
+
+body {
+  background-color: var(--hh-bg-dark);
+  color: var(--hh-text-primary);
+  font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/* Card Overrides */
+.el-card {
+  background-color: var(--hh-bg-card);
+  border: 1px solid var(--hh-border);
+  color: var(--hh-text-primary);
+  border-radius: var(--hh-radius);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.el-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border-color: var(--hh-accent); /* Hover时显示强调色边框 */
+}
+.el-card__header {
+  border-bottom: 1px solid var(--hh-border);
+  padding: 15px 20px;
+}
+.el-card__body {
+  padding: 20px;
+}
+
+/* Menu Overrides */
+.el-menu {
+  background-color: transparent !important;
+  border-right: none !important;
+}
+.el-menu-item {
+  color: var(--hh-text-secondary) !important;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.el-menu-item:hover {
+  color: var(--hh-text-primary) !important;
+  background-color: rgba(255,255,255,0.05) !important;
+}
+.el-menu-item.is-active {
+  color: var(--hh-accent) !important;
+  background-color: transparent !important;
+  font-weight: bold;
+}
+
+/* Button Overrides */
+.el-button--primary {
+  background-color: var(--hh-accent);
+  border-color: var(--hh-accent);
+  color: var(--hh-accent-text);
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.el-button--primary:hover, .el-button--primary:focus {
+  background-color: var(--hh-accent-hover);
+  border-color: var(--hh-accent-hover);
+  color: var(--hh-accent-text);
+  transform: scale(1.05); /* 微妙的放大效果 */
+}
+
+/* Tag Overrides */
+.el-tag {
+  border-radius: 4px;
+  font-weight: 600;
+}
+.el-tag--dark {
+  border: none;
+}
