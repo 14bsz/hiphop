@@ -6,12 +6,24 @@
   # 构建输出目录（相对于 base 目录）
   publish = "dist"
 
-# 单页应用路由配置
+# 环境变量
+[build.environment]
+  NODE_VERSION = "18"
+  # 确保使用最新的 npm
+  NPM_FLAGS = "--legacy-peer-deps"
+
+# 单页应用路由配置 - SPA 重定向规则
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
-# 环境变量（可选，如果需要配置 API 地址）
-[build.environment]
-  NODE_VERSION = "18"
+# 处理静态资源
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
