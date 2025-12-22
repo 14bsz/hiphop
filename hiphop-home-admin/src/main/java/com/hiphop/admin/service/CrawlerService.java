@@ -29,11 +29,14 @@ public class CrawlerService {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
     /**
-     * 爬取内容：支持微信公众号文章、B站视频、网易云音乐歌曲/专辑
-     * @param url 文章链接、BV号或网易云链接
+     * 爬取内容：支持微信公众号文章、B站视频、网易云音乐歌曲/专辑、得物商品详情
+     * @param url 文章链接、BV号、网易云链接或得物商品详情链接
      * @return 包含 title, coverImage, sourceUrl 的 Map
      */
     public Map<String, String> fetchContent(String url) throws IOException, InterruptedException {
+        if (url == null || url.isBlank()) {
+            throw new IllegalArgumentException("url 不能为空");
+        }
         // B站 BV
         if (url.startsWith("BV") || url.startsWith("bv") || url.startsWith("BV1") || url.startsWith("bv1")) {
             return fetchBilibili(url);
@@ -46,7 +49,11 @@ public class CrawlerService {
         if (url.contains("music.163.com")) {
             return fetchNeteaseMusic(url);
         }
-        throw new IllegalArgumentException("不支持的链接类型，仅支持：微信公众号、B站视频、网易云音乐");
+        // 得物商品详情
+        if (url.contains("dewu.com/product-detail")) {
+            return fetchDewuProduct(url);
+        }
+        throw new IllegalArgumentException("不支持的链接类型，仅支持：微信公众号、B站视频、网易云音乐、得物商品详情页");
     }
 
     /**
@@ -993,6 +1000,74 @@ public class CrawlerService {
             // 以字符串形式返回，方便前端直接透传
             result.put("favoriteCount", String.valueOf(favoriteCount));
         }
+        result.put("sourceUrl", normalized);
+
+        return result;
+    }
+
+    /**
+     * 爬取得物商品详情页信息，提取商品标题和封面
+     * 示例链接：https://dewu.com/product-detail.html?sourceName=pc&spuId=18001883&propertyValueId=0&skuId=916312944
+     */
+    private Map<String, String> fetchDewuProduct(String productUrl) throws IOException, InterruptedException {
+        String normalized = productUrl.trim().replace("http://", "https://");
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(normalized))
+                .header("User-Agent", USER_AGENT)
+                .timeout(Duration.ofSeconds(10))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new IOException("得物商品页面请求失败，状态码: " + response.statusCode());
+        }
+
+        String html = response.body();
+        Map<String, String> result = new HashMap<>();
+
+        // 标题：优先 meta og:title，其次 <title>
+        String title = extractByPattern(html,
+                "<meta[^>]*property=[\"']og:title[\"'][^>]*content=[\"']([^\"']+)[\"']",
+                Pattern.CASE_INSENSITIVE);
+        if (title == null || title.isEmpty()) {
+            title = extractByPattern(html,
+                    "<title>\\s*([^<]+?)\\s*</title>",
+                    Pattern.CASE_INSENSITIVE);
+        }
+        if (title != null) {
+            title = title.trim();
+            // 得物 PC 站很多页面只有通用标题，这种情况视为未成功解析
+            if (title.isEmpty() || title.equals("得物App-新一代潮流网购社区")) {
+                title = null;
+            }
+        }
+
+        // 封面：meta og:image
+        String cover = extractByPattern(html,
+                "<meta[^>]*property=[\"']og:image[\"'][^>]*content=[\"']([^\"']+)[\"']",
+                Pattern.CASE_INSENSITIVE);
+        if (cover == null || cover.isEmpty()) {
+            cover = extractByPattern(html,
+                    "<meta[^>]*name=[\"']og:image[\"'][^>]*content=[\"']([^\"']+)[\"']",
+                    Pattern.CASE_INSENSITIVE);
+        }
+        if (cover != null && !cover.isEmpty()) {
+            if (cover.startsWith("//")) {
+                cover = "https:" + cover;
+            } else if (cover.startsWith("http://")) {
+                cover = cover.replace("http://", "https://");
+            }
+        }
+
+        if (title != null && !title.isEmpty()) {
+            result.put("title", title);
+        }
+        if (cover != null && !cover.isEmpty()) {
+            result.put("coverImage", cover);
+        }
+        // 链接始终返回，方便前端使用
         result.put("sourceUrl", normalized);
 
         return result;

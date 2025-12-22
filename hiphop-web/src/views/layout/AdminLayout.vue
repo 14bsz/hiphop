@@ -31,6 +31,10 @@
             <el-icon><Calendar /></el-icon>
             <span>每日推荐管理</span>
           </el-menu-item>
+          <el-menu-item index="/admin/home/sneakers">
+            <el-icon><Goods /></el-icon>
+            <span>球鞋资讯管理</span>
+          </el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-aside>
@@ -48,7 +52,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { House, Picture, StarFilled, Calendar, Collection } from '@element-plus/icons-vue'
+import { House, Picture, StarFilled, Calendar, Collection, Goods } from '@element-plus/icons-vue'
 
 const route = useRoute()
 

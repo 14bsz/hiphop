@@ -1,4 +1,4 @@
-export const apiBase = 'http://localhost:8080'
+export const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 export async function getBuzzList(params: Record<string, any> = {}) {
   // 过滤掉 undefined 和 null 值
   const filteredParams: Record<string, any> = {}
@@ -94,6 +94,55 @@ export async function updateNewsStatus(id: number | string, status: number) {
   })
   return res.json()
 }
+
+// 球鞋资讯
+export async function getSneakerList(params: Record<string, any> = {}) {
+  const filteredParams: Record<string, any> = {}
+  for (const key in params) {
+    if (params[key] !== undefined && params[key] !== null && params[key] !== 'undefined') {
+      filteredParams[key] = params[key]
+    }
+  }
+  const qs = new URLSearchParams(filteredParams as any).toString()
+  const res = await fetch(`${apiBase}/api/home/sneakers${qs ? `?${qs}` : ''}`)
+  return res.json()
+}
+
+export async function createSneaker(data: any) {
+  const res = await fetch(`${apiBase}/api/home/sneakers`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  return res.json()
+}
+
+export async function updateSneaker(id: number | string, data: any) {
+  const idStr = String(id)
+  const res = await fetch(`${apiBase}/api/home/sneakers/${idStr}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  return res.json()
+}
+
+export async function deleteSneaker(id: number | string) {
+  const idStr = String(id)
+  const res = await fetch(`${apiBase}/api/home/sneakers/${idStr}`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}
+
+export async function updateSneakerStatus(id: number | string, status: number) {
+  const idStr = String(id)
+  const res = await fetch(`${apiBase}/api/home/sneakers/${idStr}/status?status=${status}`, {
+    method: 'PATCH'
+  })
+  return res.json()
+}
+
 export async function fetchContent(url: string) {
   const res = await fetch(`${apiBase}/api/home/buzz/fetch?url=${encodeURIComponent(url)}`, {
     method: 'POST'

@@ -17,7 +17,7 @@ const routes = [
       {
         path: 'news',
         name: 'News',
-        redirect: '/news/songs',
+        redirect: '/news/albums',
         meta: { title: '资讯', icon: 'Document' },
         children: [
           {
@@ -25,6 +25,18 @@ const routes = [
             name: 'NewsSongs',
             component: () => import('../views/news/Songs.vue'),
             meta: { title: '歌曲' }
+          },
+          {
+            path: 'albums',
+            name: 'NewsAlbums',
+            component: () => import('../views/news/Albums.vue'),
+            meta: { title: '专辑' }
+          },
+          {
+            path: 'sneakers',
+            name: 'NewsSneakers',
+            component: () => import('../views/news/Sneakers.vue'),
+            meta: { title: '球鞋' }
           }
         ]
       },
@@ -100,6 +112,12 @@ const routes = [
             name: 'AdminDaily',
             component: () => import('../views/admin/DailyRecommendAdmin.vue'),
             meta: { title: '每日推荐管理', icon: 'Calendar', requiresAuth: true }
+          },
+          {
+            path: 'sneakers',
+            name: 'AdminSneakers',
+            component: () => import('../views/admin/SneakerAdmin.vue'),
+            meta: { title: '球鞋资讯管理', icon: 'Goods', requiresAuth: true }
           }
         ]
       }

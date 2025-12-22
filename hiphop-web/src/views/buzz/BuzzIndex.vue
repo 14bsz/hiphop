@@ -87,7 +87,7 @@
                <span
                  class="pill"
                  :class="{ active: activeType === 2 }"
-                 @click="activeType = 2"
+                 @click="handleAlbumClick"
                >专辑</span>
             </div>
          </div>
@@ -97,7 +97,7 @@
                v-for="(item, index) in (activeType === 1 ? topRatedSingles : topRatedAlbums)"
                :key="index"
                :class="[getTopRatedCardClass(index), { highlight: index === 0 }]"
-               @click="openLink(item.url)"
+               @click="handleTopRatedClick(item)"
              >
                <div class="rated-cover">
                  <img :src="item.cover" @error="onImgError" />
@@ -187,8 +187,10 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { VideoPlay, Headset, Document, CaretRight, VideoCamera, Mute, Microphone, Sunny, View, StarFilled, Share, ChatDotRound } from '@element-plus/icons-vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { getLatestDaily } from '../../api/adminHome'
 
+const router = useRouter()
 const scrollY = ref(0)
 const defaultTickerItems = [
   { text: '突发新闻：KANYE WEST 宣布全新 YEEZY 系列发售', url: '' },
@@ -247,6 +249,10 @@ const activeType = ref(1)
 const topRatedSingles = ref([])
 const topRatedAlbums = ref([])
 
+const handleAlbumClick = () => {
+  activeType.value = 2
+}
+
 const dailySongs = ref([
     { title: 'Tron Cena', artist: 'BabyTron', badge: '热度爆表', date: '2025年12月13日', cover: 'https://picsum.photos/100/100?random=11' },
     { title: 'Chances', artist: 'Polo G', badge: '热度爆表', date: '2025年12月13日', cover: 'https://picsum.photos/100/100?random=12' },
@@ -286,6 +292,16 @@ const getTopRatedCardClass = (index) => {
   // 只需要 0-5 六种样式，防御性处理一下
   const i = index % 6
   return base + i
+}
+
+const handleTopRatedClick = (item) => {
+  if (item && item.url) {
+    openLink(item.url)
+    return
+  }
+  if (activeType.value === 2) {
+    router.push('/news/albums')
+  }
 }
 
 const handleScroll = () => {

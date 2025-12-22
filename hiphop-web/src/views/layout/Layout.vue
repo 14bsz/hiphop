@@ -3,7 +3,7 @@
     <el-header class="header">
       <div class="header-inner">
         <!-- Left: Logo -->
-        <div class="logo-wrapper">
+        <div class="logo-wrapper" @click="navigateTo('/buzz')">
           <div class="logo">
             <h1>HNHH</h1>
             <span class="logo-star">★</span>
@@ -16,11 +16,11 @@
               资讯 <el-icon class="dropdown-icon"><ArrowDown /></el-icon>
               <div class="dropdown-menu">
                  <div class="dropdown-item" @click="navigateTo('/news/songs')">单曲</div>
-                 <div class="dropdown-item">专辑</div>
+                 <div class="dropdown-item" @click="navigateTo('/news/albums')">专辑</div>
                  <div class="dropdown-item">音乐</div>
                  <div class="dropdown-item">生活方式</div>
                  <div class="dropdown-item">运动</div>
-                 <div class="dropdown-item">球鞋</div>
+                 <div class="dropdown-item" @click="navigateTo('/news/sneakers')">球鞋</div>
                  <div class="dropdown-item">政治</div>
                  <div class="dropdown-item">科技</div>
               </div>
@@ -142,6 +142,7 @@ const navigateTo = (path) => {
   display: flex;
   align-items: center;
   margin-right: 40px; /* Space between logo and nav */
+  cursor: pointer;
 }
 .logo {
   display: flex;
