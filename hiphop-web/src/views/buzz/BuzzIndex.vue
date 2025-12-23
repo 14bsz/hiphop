@@ -190,6 +190,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { getLatestDaily } from '../../api/adminHome'
 
+const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+
 const router = useRouter()
 const scrollY = ref(0)
 const defaultTickerItems = [
@@ -213,13 +215,13 @@ const onImgError = (e) => {
   const h = e.target.clientHeight || 200
   const src = e.target.src || ''
   // 处理 Bilibili 图片
-  if (/i[0-9]\.hdslb\.com/.test(src) && !src.startsWith('/img-proxy')) {
-    e.target.src = `/img-proxy?url=${encodeURIComponent(src)}`
+  if (/i[0-9]\.hdslb\.com/.test(src) && !src.startsWith('/.netlify/functions/img-proxy')) {
+    e.target.src = `/.netlify/functions/img-proxy?url=${encodeURIComponent(src)}`
     return
   }
   // 处理微信公众号图片
-  if ((/mmbiz\.qpic\.cn/i.test(src) || /qpic\.cn/i.test(src)) && !src.startsWith('/img-proxy')) {
-    e.target.src = `/img-proxy?url=${encodeURIComponent(src)}`
+  if ((/mmbiz\.qpic\.cn/i.test(src) || /qpic\.cn/i.test(src)) && !src.startsWith('/.netlify/functions/img-proxy')) {
+    e.target.src = `/.netlify/functions/img-proxy?url=${encodeURIComponent(src)}`
     return
   }
   e.target.src = `https://picsum.photos/${w}/${h}?random=${Date.now()}`
@@ -234,11 +236,11 @@ const normalize = (u) => {
       if (https.includes('@') && https.endsWith('.webp')) {
         return https
       }
-      return `/img-proxy?url=${encodeURIComponent(https)}`
+      return `/.netlify/functions/img-proxy?url=${encodeURIComponent(https)}`
     }
     // 处理微信公众号图片 - 自动通过代理
     if (/mmbiz\.qpic\.cn$/i.test(url.hostname) || /qpic\.cn$/i.test(url.hostname)) {
-      return `/img-proxy?url=${encodeURIComponent(https)}`
+      return `/.netlify/functions/img-proxy?url=${encodeURIComponent(https)}`
     }
   } catch {}
   return https
@@ -326,7 +328,7 @@ const fetchData = async () => {
     let featuredData = []
     // 1. 优先从展位表获取三个展位的数据
     try {
-      const featuredRes = await axios.get('http://localhost:8080/api/home/featured?status=1')
+      const featuredRes = await axios.get(`${apiBase}/api/home/featured?status=1`)
       if (Array.isArray(featuredRes.data) && featuredRes.data.length > 0) {
         featuredData = featuredRes.data
         
@@ -410,7 +412,7 @@ const fetchData = async () => {
     // 3. 获取其他数据（如果热门趋势数据为空，则从buzz接口获取作为fallback）
     let data = []
     try {
-      const apiRes = await axios.get('http://localhost:8080/api/home/buzz?status=1')
+      const apiRes = await axios.get(`${apiBase}/api/home/buzz?status=1`)
       if (Array.isArray(apiRes.data) && apiRes.data.length > 0) {
         data = apiRes.data.map(item => ({
           title: item.title,
@@ -512,7 +514,7 @@ const fetchData = async () => {
 
     // 7. Latest News：优先从最新资讯表获取
     try {
-      const newsRes = await axios.get('http://localhost:8080/api/home/news', {
+      const newsRes = await axios.get(`${apiBase}/api/home/news`, {
         params: { status: 1 }
       })
       if (Array.isArray(newsRes.data) && newsRes.data.length > 0) {
@@ -560,7 +562,7 @@ onMounted(() => {
   // 单独加载高分音乐榜（只取状态启用的），区分单曲 / 专辑
   const loadTopRated = async (type, targetRef) => {
     try {
-      const res = await axios.get('http://localhost:8080/api/home/top-rated', {
+      const res = await axios.get(`${apiBase}/api/home/top-rated`, {
         params: { status: 1, type }
       })
       if (Array.isArray(res.data)) {
