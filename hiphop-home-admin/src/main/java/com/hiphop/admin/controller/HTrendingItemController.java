@@ -154,7 +154,3 @@ public class HTrendingItemController {
         return trendingItemService.removeById(id);
     }
 }
-
-
-
-
